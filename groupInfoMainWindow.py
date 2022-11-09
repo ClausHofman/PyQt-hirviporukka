@@ -5,9 +5,10 @@
 # ---------------------
 
 import sys # Needed for starting the application
-import psycopg2
 from PyQt5.QtWidgets import * # All widgets
 from PyQt5.uic import loadUi
+import pgModule
+import prepareData
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
@@ -25,25 +26,47 @@ class groupMainWindow(QMainWindow):
         self.refreshBtn = self.refreshPushButton
         self.groupInfo = self.groupSummaryTableWidget
         self.sharedMeatInfo = self.meatSharedTableWidget
-
+        '''
         # Database connection parameters
         self.database = "metsastys"
         self.user = "sovellus"
         self.userPassword = "Q2werty"
         self.server = "localhost"
         self.port = "5432"
-
+        '''
         # SIGNALS
 
         # Emit a signal when refresh push button is pressed
-        self.refreshBtn.clicked.connect(self.refreshData)
+        self.refreshBtn.clicked.connect(self.agentRefreshData)
+
 
     # SLOTS
+    
+    # Agent method is used for receiving a signal from an UI element
+    def agentRefreshData(self):
 
-    #Load data to table widgets
-    # Try to establish a connection to DB server
-    def refreshData(self):
-        
+        # Read data from view jaetut_lihat
+        databaseOperation1 = pgModule.DatabaseOperation()
+        connectionArguments = databaseOperation1.readDatabaseSettingsFromFile('settings.dat')
+        databaseOperation1.getAllRowsFromTable(connectionArguments, 'public.jaetut_lihat')
+        print(databaseOperation1.detailedMessage)
+
+        # Read data from view jakoryhma_yhteenveto, no need to read connection args twice
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.jakoryhma_yhteenveto')
+
+        # Let's call the real method which updates the widget
+        self.refreshData(databaseOperation1, self.sharedMeatInfo)
+        self.refreshData(databaseOperation2, self.groupInfo)
+
+    # This is a function that updates table widgets in the UI
+    # because it does not receive signals; it's not a slot
+    def refreshData(self, databaseOperation, widget):
+        prepareData.prepareTable(databaseOperation, widget)
+    
+
+
+        '''    
         # To avoid Fatal error crashing the app use try-except-finally structure
         try:
             # Create a connection object
@@ -69,7 +92,9 @@ class groupMainWindow(QMainWindow):
                 cursor.close()
                 dbaseconnetion.close()
                 print("Yhteys tietokantaan katkaistiin")
+    '''
 
+# Check if app will be created and started directly 
 if __name__ == "__main__":
 
     # Create an application object

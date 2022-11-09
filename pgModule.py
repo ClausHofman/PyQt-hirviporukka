@@ -127,6 +127,7 @@ class DatabaseOperation():
             if self.errorCode == 0:
                 dbconnection.close
 
+    # TODO: Finish writing methods for insert, update and delete
     # Method to insert a row to a given table
     def insertRowToTable(self, connectionArgs, sqlClause):
         """Inserts a row to table accordings to a SQL clause
@@ -171,6 +172,8 @@ if __name__ == "__main__":
     '''
     print(dictionary)
     '''
+    # FIXME: Correct the line above
+    
     # Save those settings to file
     testOperation.saveDatabaseSettingsToFile('settings.dat', dictionary)
 
