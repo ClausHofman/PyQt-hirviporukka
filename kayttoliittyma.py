@@ -14,7 +14,7 @@ import prepareData
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
 
-class kayttoliittyma(QMainWindow):
+class Kayttoliittyma(QMainWindow):
     
     # Constructor, a method for creating objects from this class
     def __init__(self):
@@ -103,6 +103,6 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
 
     # Create the Main Window object from kayttoliittyma Class
-    appWindow = kayttoliittyma()
+    appWindow = Kayttoliittyma()
     appWindow.show()
     sys.exit(app.exec_())
