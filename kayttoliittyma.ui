@@ -384,7 +384,7 @@
          </date>
         </property>
        </widget>
-       <widget class="QComboBox" name="comboBox">
+       <widget class="QComboBox" name="meatSharePageAnimalPartComboBox">
         <property name="geometry">
          <rect>
           <x>185</x>
@@ -394,7 +394,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="meatSharePageWeightLineEdit">
         <property name="geometry">
          <rect>
           <x>260</x>
@@ -443,7 +443,7 @@
          <string>Paino (kg)</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="comboBox_2">
+       <widget class="QComboBox" name="meatSharePageShareGroupComboBox">
         <property name="geometry">
          <rect>
           <x>110</x>
@@ -466,7 +466,7 @@
          <string>Jakoryhmä</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="saveShotPushButton_2">
+       <widget class="QPushButton" name="meatSharePageSavePushButton">
         <property name="geometry">
          <rect>
           <x>430</x>
@@ -482,7 +482,7 @@
          <string>Tallenna</string>
         </property>
        </widget>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="meatSharePageGroupBox">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -755,10 +755,10 @@
   <tabstop>saveShotPushButton</tabstop>
   <tabstop>killPageKillsTableWidget</tabstop>
   <tabstop>meatSharePageDateEdit</tabstop>
-  <tabstop>comboBox_2</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>lineEdit</tabstop>
-  <tabstop>saveShotPushButton_2</tabstop>
+  <tabstop>meatSharePageShareGroupComboBox</tabstop>
+  <tabstop>meatSharePageAnimalPartComboBox</tabstop>
+  <tabstop>meatSharePageWeightLineEdit</tabstop>
+  <tabstop>meatSharePageSavePushButton</tabstop>
   <tabstop>meatSharePageKillsTableWidget</tabstop>
   <tabstop>licenseYearLineEdit</tabstop>
   <tabstop>licenseAnimalComboBox</tabstop>
