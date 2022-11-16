@@ -72,7 +72,7 @@ class Kayttoliittyma(QMainWindow):
         self.server = "localhost"
         self.port = "5432"
         '''
-        # SIGNALS
+        # OTHER SIGNALS THAN EMITTED BY UI ELEMENTS
 
         # Emit a signal when refresh push button is pressed
         self.summaryRefreshBtn.clicked.connect(self.agentRefreshData)
@@ -89,15 +89,17 @@ class Kayttoliittyma(QMainWindow):
         databaseOperation1.getAllRowsFromTable(connectionArguments, 'public.jaetut_lihat')
         print(databaseOperation1.detailedMessage)
         #: TODO MessageBox if an error occured
+        prepareData.prepareTable(databaseOperation1, self.summaryMeatSharedTableWidget)
 
         # Read data from view jakoryhma_yhteenveto, no need to read connection args twice
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.jakoryhma_yhteenveto')
         #: TODO MessageBox if an error occured
-        
+        prepareData.prepareTable(databaseOperation1, self.summaryGroupInfoTableWidget)
+
         # Let's call the real method which updates the widget
-        self.refreshData(databaseOperation1, self.summaryMeatSharedTableWidget)
-        self.refreshData(databaseOperation2, self.summaryGroupInfoTableWidget)
+        # self.refreshData(databaseOperation1, self.summaryMeatSharedTableWidget)
+        # self.refreshData(databaseOperation2, self.summaryGroupInfoTableWidget)
 
     # This is a function that updates table widgets in the UI
     # because it does not receive signals; it's not a slot
