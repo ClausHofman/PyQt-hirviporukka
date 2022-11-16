@@ -23,10 +23,47 @@ class Kayttoliittyma(QMainWindow):
         # Create an UI from the ui file
         loadUi('kayttoliittyma.ui', self)
 
-        # Define properties for ui elements
-        self.refreshBtn = self.meatSharedPushButton
-        self.groupInfo = self.groupSummaryTableWidget
-        self.sharedMeatInfo = self.meatSharedTableWidget
+        # UI ELEMENTS TO PROPERTIES
+        # -------------------------
+
+        # Summary page (Yhteenveto)
+        self.summaryRefreshBtn = self.meatSharedPushButton
+        self.summaryMeatSharedTableWidget = self.meatSharedTableWidget
+        self.summaryGroupInfoTableWidget = self.groupSummaryTableWidget
+
+        # Kill page
+        self.shotByCB = self.shotByComboBox
+        self.killPageDate = self.killPageDateEdit
+        self.killPageLocation = self.locationLineEdit
+        self.killPageAnimalCB = self.animalComboBox
+        self.killPageAgeGroupCB = self.ageGroupComboBox
+        self.killPageGenderCB = self.genderComboBox
+        self.killPageWeightLE = self.killPageWeightLineEdit
+        self.killPageUsageCB = self.killPageUsageComboBox
+        self.killPageInfoTE = self.killPageAdditionalInfoPlainTextEdit
+        self.killPageSaveBtn = self.saveShotPushButton
+        self.killPageKillsTW = self.killPageKillsTableWidget
+
+        # Shared meat page
+        self.meatSharePageKillsTW = self.meatSharePageKillsTableWidget
+        self.meatSharePageDate = self.meatSharePageDateEdit
+        self.meatSharePageSharedGroupCB = self.meatSharePageShareGroupComboBox
+        self.meatSharePageAnimalPartCB = self.meatSharePageAnimalPartComboBox
+        self.meatSharePageWeightLE = self.meatSharePageWeightLineEdit
+        self.meatSharePageSaveBtn = self.meatSharePageSavePushButton
+        self.meatSharePageGrpBox = self.meatSharePageGroupBox
+
+        # License page
+        self.licenseYearLE = self.licenseYearLineEdit
+        self.licenseAnimalCB = self.licenseAnimalComboBox
+        self.licenseAgeGroupCB = self.licenseAgeGroupComboBox
+        self.licenseGenderCB = self.licenseGenderComboBox
+        self.licenseAmountLE = self.licenseAmountLineEdit
+        self.licenseSaveBtn = self.licenseSaveButton
+        self.licenseSummaryTW = self.licenseSummaryTableWidget
+
+
+
         '''
         # Database connection parameters
         self.database = "metsastys"
@@ -38,7 +75,7 @@ class Kayttoliittyma(QMainWindow):
         # SIGNALS
 
         # Emit a signal when refresh push button is pressed
-        self.refreshBtn.clicked.connect(self.agentRefreshData)
+        self.summaryRefreshBtn.clicked.connect(self.agentRefreshData)
 
 
     # SLOTS
@@ -51,14 +88,16 @@ class Kayttoliittyma(QMainWindow):
         connectionArguments = databaseOperation1.readDatabaseSettingsFromFile('settings.dat')
         databaseOperation1.getAllRowsFromTable(connectionArguments, 'public.jaetut_lihat')
         print(databaseOperation1.detailedMessage)
+        #: TODO MessageBox if an error occured
 
         # Read data from view jakoryhma_yhteenveto, no need to read connection args twice
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.jakoryhma_yhteenveto')
-
+        #: TODO MessageBox if an error occured
+        
         # Let's call the real method which updates the widget
-        self.refreshData(databaseOperation1, self.sharedMeatInfo)
-        self.refreshData(databaseOperation2, self.groupInfo)
+        self.refreshData(databaseOperation1, self.summaryMeatSharedTableWidget)
+        self.refreshData(databaseOperation2, self.summaryGroupInfoTableWidget)
 
     # This is a function that updates table widgets in the UI
     # because it does not receive signals; it's not a slot
