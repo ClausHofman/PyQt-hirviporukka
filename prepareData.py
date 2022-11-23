@@ -29,6 +29,8 @@ def prepareTable(resultObject, tableWidget):
         resultObject (DatabaseOperation): Instance of DatabaseOperation class -> errors and results
         tableWidget (QTableWidget): Table widget to be updated
     """
+    # Clear table widget before populating it
+    tableWidget.clear()
     
     # If there is no error start processing rows and columns of the result set
     if resultObject.errorCode == 0:
@@ -60,6 +62,9 @@ def prepareComboBox(resultObject, comboBox, ixToShow, ixToReturn):
     Returns:
         list: Value of interest
     """
+    # Clear combo box before populating it
+    comboBox.clear()
+
     # Result set is a list of tuples even when there is only one column in the view
     cBValuesOfInterest = [] # Empty list for values of interest, cB=combo box
     cBItems = []  # Empty list for choices in the combo box

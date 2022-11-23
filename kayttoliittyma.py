@@ -42,6 +42,7 @@ class Kayttoliittyma(QMainWindow):
         self.killPageUsageCB = self.killPageUsageComboBox
         self.killPageInfoTE = self.killPageAdditionalInfoPlainTextEdit
         self.killPageSaveBtn = self.saveShotPushButton
+        self.killPageSaveBtn.clicked.connect(self.saveShot)
         self.killPageKillsTW = self.killPageKillsTableWidget
 
         # Shared meat page
@@ -102,17 +103,69 @@ class Kayttoliittyma(QMainWindow):
         print(databaseOperation1.detailedMessage)
         #: TODO MessageBox if an error occured
         prepareData.prepareTable(databaseOperation1, self.killPageKillsTW)
-        prepareData.prepareTable(databaseOperation1, self.summaryGroupInfoTableWidget)
+        prepareData.prepareTable(databaseOperation1, self.summaryGroupInfoTableWidget) # poista?
 
         # Read data from view nimivalinta
         databaseOperation2 = pgModule.DatabaseOperation()
-        databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.nimivalinta')
-        self.shotById = prepareData.prepareComboBox(databaseOperation2, self.shotByCB, 1, 0)
+        databaseOperation2.getAllRowsFromTable(
+            connectionArguments, 'public.nimivalinta')
+        self.shotByIdList = prepareData.prepareComboBox(
+            databaseOperation2, self.shotByCB, 1, 0)
+
+        # Read data from table elain and populate the combo box
+        databaseOperation3 = pgModule.DatabaseOperation()
+        databaseOperation3.getAllRowsFromTable(
+            connectionArguments, 'public.elain')
+        self.shotAnimalText = prepareData.prepareComboBox(
+            databaseOperation3, self.killPageAnimalCB, 0, 0)
+
+        # Read data from table aikuinenvasa and populate the combo box
+        databaseOperation4 = pgModule.DatabaseOperation()
+        databaseOperation4.getAllRowsFromTable(
+            connectionArguments, 'public.aikuinenvasa')
+        self.shotAgeGroupText = prepareData.prepareComboBox(
+            databaseOperation4, self.killPageAgeGroupCB, 0, 0)
+
+        # Read data from table sukupuoli and populate the combo box
+        databaseOperation5 = pgModule.DatabaseOperation()
+        databaseOperation5.getAllRowsFromTable(
+            connectionArguments, 'public.sukupuoli')
+        self.shotGenderText = prepareData.prepareComboBox(
+            databaseOperation5, self.killPageGenderCB, 0, 0)
+
+        # Read data from table kasittely
+        databaseOperation6 = pgModule.DatabaseOperation()
+        databaseOperation6.getAllRowsFromTable(
+            connectionArguments, 'public.kasittely')
+        self.shotUsageIdList = prepareData.prepareComboBox(
+            databaseOperation6, self.killPageUsageCB, 1, 0)
+
 
     def populateAllPages(self):
         self.populateSummaryPage()
         self.populateKillPage()
     
+    def saveShot(self):
+        # TODO: Add error handling and msg box when an error occurs
+        shotByChosenItemIx = self.shotByCB.currentIndex()
+        shotById = self.shotByIdList[shotByChosenItemIx]
+        shootingDay = self.killPageDate.date().toPyDate()
+        shootingPlace = self.killPageLocation.text()
+        animal = self.killPageAnimalCB.currentText()
+        ageGroup = self.killPageAgeGroupCB.currentText()
+        gender = self.killPageGenderCB.currentText()
+        weight = float(self.killPageWeightLE.text())
+        useIx = self.killPageUsageCB.currentIndex()
+        use = self.shotUsageIdList[useIx]
+        additionalInfo = self.killPageInfoTE.toPlainText()
+
+        # Insert data into kaato table
+
+        sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, kasittelyid, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
+        sqlClauseValues = f"{shotById}, {shootingDay}, {weight}, '{shootingPlace}', {use}, '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}'"
+        sqlClauseEnd = ");"
+        sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
+        print(sqlClause)
 
 
         '''    
