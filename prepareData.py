@@ -64,7 +64,7 @@ def prepareComboBox(resultObject, comboBox, ixToShow, ixToReturn):
     cBValuesOfInterest = [] # Empty list for values of interest, cB=combo box
     cBItems = []  # Empty list for choices in the combo box
 
-    for result in resultObject.resultset:
+    for result in resultObject.resultSet:
         cBValueOfInterest = result[ixToReturn] # Choose column to use as value of interest
         resultAsString = str(result[ixToShow]) # Convert element to show in the tuple as a string
         cBItems.append(resultAsString) # Append it to the choices list of the combo box

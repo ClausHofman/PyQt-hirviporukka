@@ -107,7 +107,7 @@ class Kayttoliittyma(QMainWindow):
         # Read data from view nimivalinta
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.nimivalinta')
-
+        self.shotById = prepareData.prepareComboBox(databaseOperation2, self.shotByCB, 1, 0)
 
     def populateAllPages(self):
         self.populateSummaryPage()
