@@ -62,26 +62,23 @@ class Kayttoliittyma(QMainWindow):
         self.licenseSaveBtn = self.licenseSaveButton
         self.licenseSummaryTW = self.licenseSummaryTableWidget
 
+        # Signal when a page is opened
+        self.pageTab = self.tabWidget
+        self.pageTab.currentChanged.connect(self.populateAllPages)
 
 
-        '''
-        # Database connection parameters
-        self.database = "metsastys"
-        self.user = "sovellus"
-        self.userPassword = "Q2werty"
-        self.server = "localhost"
-        self.port = "5432"
-        '''
         # OTHER SIGNALS THAN EMITTED BY UI ELEMENTS
+        self.populateAllPages()
+
 
         # Emit a signal when refresh push button is pressed
-        self.summaryRefreshBtn.clicked.connect(self.agentRefreshData)
+        self.summaryRefreshBtn.clicked.connect(self.populateSummaryPage)
 
 
     # SLOTS
     
     # Agent method is used for receiving a signal from an UI element
-    def agentRefreshData(self):
+    def populateSummaryPage(self):
 
         # Read data from view jaetut_lihat
         databaseOperation1 = pgModule.DatabaseOperation()
@@ -95,16 +92,26 @@ class Kayttoliittyma(QMainWindow):
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.jakoryhma_yhteenveto')
         #: TODO MessageBox if an error occured
+        prepareData.prepareTable(databaseOperation2, self.summaryGroupInfoTableWidget)
+    
+    def populateKillPage(self):
+        # Read data from view kaatoluettelo
+        databaseOperation1 = pgModule.DatabaseOperation()
+        connectionArguments = databaseOperation1.readDatabaseSettingsFromFile('settings.dat')
+        databaseOperation1.getAllRowsFromTable(connectionArguments, 'public.kaatoluettelo')
+        print(databaseOperation1.detailedMessage)
+        #: TODO MessageBox if an error occured
+        prepareData.prepareTable(databaseOperation1, self.killPageKillsTW)
         prepareData.prepareTable(databaseOperation1, self.summaryGroupInfoTableWidget)
 
-        # Let's call the real method which updates the widget
-        # self.refreshData(databaseOperation1, self.summaryMeatSharedTableWidget)
-        # self.refreshData(databaseOperation2, self.summaryGroupInfoTableWidget)
+        # Read data from view nimivalinta
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(connectionArguments, 'public.nimivalinta')
 
-    # This is a function that updates table widgets in the UI
-    # because it does not receive signals; it's not a slot
-    def refreshData(self, databaseOperation, widget):
-        prepareData.prepareTable(databaseOperation, widget)
+
+    def populateAllPages(self):
+        self.populateSummaryPage()
+        self.populateKillPage()
     
 
 
