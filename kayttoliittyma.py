@@ -151,28 +151,33 @@ class Kayttoliittyma(QMainWindow):
     
     def saveShot(self):
         # TODO: Add error handling and msg box when an error occurs
-        shotByChosenItemIx = self.shotByCB.currentIndex()
-        shotById = self.shotByIdList[shotByChosenItemIx]
-        shootingDay = self.killPageDate.date().toPyDate()
-        shootingPlace = self.killPageLocation.text()
-        animal = self.killPageAnimalCB.currentText()
-        ageGroup = self.killPageAgeGroupCB.currentText()
-        gender = self.killPageGenderCB.currentText()
-        weight = float(self.killPageWeightLE.text())
-        useIx = self.killPageUsageCB.currentIndex()
-        use = self.shotUsageIdList[useIx]
-        additionalInfo = self.killPageInfoTE.toPlainText()
+        shotByChosenItemIx = self.shotByCB.currentIndex() # Row index of the selected row
+        shotById = self.shotByIdList[shotByChosenItemIx] # Id of the selected row
+        shootingDay = self.killPageDate.date().toPyDate() # Python date is in ISO format
+        shootingPlace = self.killPageLocation.text() # Text value of the line edit
+        animal = self.killPageAnimalCB.currentText() # Selected text of the combo box
+        ageGroup = self.killPageAgeGroupCB.currentText() # Selected text of the combo box
+        gender = self.killPageGenderCB.currentText() # Selected text of the combo box
+        weight = float(self.killPageWeightLE.text()) # Convert line edit value to float (real in the DB)
+        useIx = self.killPageUsageCB.currentIndex() # Row index of the selected row
+        use = self.shotUsageIdList[useIx] # Id value of the selected row
+        additionalInfo = self.killPageInfoTE.toPlainText() # Convert multiline text edit to plain text
 
         # Insert data into kaato table
 
+        # Create a SQL clause to insert element values to the DB
         sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, kasittelyid, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
         sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', {use}, '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}'"
         sqlClauseEnd = ");"
         sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-        print(sqlClause)
+        
+        print(sqlClause) # FIXME: Remove this line in production
+        
+        # Create a database operation object to execute the SQL clause
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
 
+        # TODO: Add refresh method to update kaadot table widget
         '''    
         # To avoid Fatal error crashing the app use try-except-finally structure
         try:
@@ -208,7 +213,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
 
-    # Create the Main Window object from kayttoliittyma Class
+    # Create the Main Window object from Kayttoliittyma Class
     appWindow = Kayttoliittyma()
-    appWindow.show()
+    appWindow.show() # This can also be included in the Kayttoliittyma class
     sys.exit(app.exec_())
